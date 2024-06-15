@@ -5,25 +5,23 @@
 <head>  
   
   <style>
-  {
-    {
---primary: rgb(29, 221, 189);
---bgDark: rgb(12, 12, 12);
---white: rgb(250, 250, 250);
---secondary: rgb(0, 59, 50);
---bgLight: rgb(190, 181, 181);
-}
-  }
   
-padding: 0;
-margin: 0;
-box-sizing: border-box;
--webkit-font-smoothing: antialiased;
-}
-{
-    background-color: var(--bgDark);
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 73% 94%, 0 100%);
-    }
+   
+  
+  
+
+
+  .alert{
+      width: 100%;
+      background: olivedrab;
+      padding: 10px 20px;
+      border-radius: 5px;
+      text-align: center;
+      font-size: 18px;
+      font-weight: 600;
+      display: none;
+  }
+   
     header nav .left a{
 color: var(--white);
 text-decoration: none;
@@ -129,10 +127,16 @@ color: var(--secondary);
     margin-bottom: 2rem;
     }
 
+    
+
     </style>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="./styles.css">
+
+<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<!-- Add Firebase products that you want to use -->
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -183,9 +187,78 @@ rel="stylesheet">
             </p>
             <p>“A successful website does three things: It attracts the right kinds of visitors. Guides them to the main services or product you offer. Collect Contact details for future ongoing relation.”</p>
             <div>
-            <button class="btn btn-secondary">DOWNLOAD CV</button>
+              <h2>Feedback Forms</h2>
+
+              <form id="feedbackforms">
+                <div class="alert">Your Mesaage Sent </div>
+                <label for="fname">First name:</label><br>
+                <input type="text" id="fname" name="fname" required><br>
+                <label for="lname">Last name:</label><br>
+                <input type="text" id="lname" name="lname" required><br><br>
+                <button type="submit">Submit</button>
+              </form> 
             </div>
             </div>
             </div>
+
+<script>
+  
+const firebaseConfig = {
+    apiKey: "AIzaSyD225xoFe642DSa9D7XGlQusVqd97O1i4U",
+    authDomain: "spheric-radio-412805.firebaseapp.com",
+    databaseURL: "https://spheric-radio-412805-default-rtdb.firebaseio.com",
+    projectId: "spheric-radio-412805",
+    storageBucket: "spheric-radio-412805.appspot.com",
+    messagingSenderId: "171995229326",
+    appId: "1:171995229326:web:f99dd9fdab1e45eac6eddf",
+    measurementId: "G-YPQQT74X1T"
+    //   copy your firebase config informations
+  };
+  
+  // initialize firebase
+  firebase.initializeApp(firebaseConfig);
+  
+  // reference your database
+  var feedbackformsDB = firebase.database().ref("feedbackforms");
+  
+  document.getElementById("feedbackforms").addEventListener("submit", submitForm);
+  
+  function submitForm(e) {
+    e.preventDefault();
+  
+    var fname = getElementVal("fname");
+    var lname = getElementVal("lname");
+    
+    console.log(fname,lname);
+  
+    saveMessages(fname, lname);
+  
+    //   enable alert
+    document.querySelector(".alert").style.display = "block";
+  
+    //   remove the alert
+    setTimeout(() => {
+      document.querySelector(".alert").style.display = "none";
+    }, 3000);
+  
+    //   reset the form
+    document.getElementById("feedbackforms").reset();
+  }
+  
+  const saveMessages = (fname, lname) => {
+    var newfeedbackForm = feedbackformsDB.push();
+  
+    newfeedbackForm.set({
+      fname: fname,
+      lname: lname,
+      
+    });
+  };
+  
+  const getElementVal = (id) => {
+    return document.getElementById(id).value;
+  };
+  
+</script>
 </body>
 </html>
